@@ -24,7 +24,7 @@ jobs:
     - name: Publish
       run: dotnet publish BlazorTodo/BlazorTodo.csproj -c Release -o release --nologo
     - name: Fix path and fix github pages shenanigans
-      run: sed -i 's/<base href="\/" \/>/<base href="\/BlazorWasmHelloWorld\/" \/>/g' release/wwwroot/index.html && touch release/wwwroot/.nojekyll
+      run: sed -i 's/<base href="\/" \/>/<base href="\/BlazorWasmTodo\/" \/>/g' release/wwwroot/index.html && touch release/wwwroot/.nojekyll
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4
       with:
