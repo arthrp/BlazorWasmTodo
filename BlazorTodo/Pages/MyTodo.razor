@@ -1,0 +1,47 @@
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+@page "/MyTodo"
+@using System.Text.Json
+
+<PageTitle>Todo</PageTitle>
+
+<h1>Todo @(_todos.Count(t => !t.IsFinished)) of @(_todos.Count)</h1>
+
+<ul>
+    @foreach (var todo in _todos)
+    {
+        <li>
+            <input type="checkbox" @bind="todo.IsFinished"/>
+            <span>@todo.Title</span>
+        </li>
+    }
+</ul>
+
+<input placeholder="Something todo" @bind="_newTodo" />
+<button @onclick="AddTodo">Add todo</button>
+
+@code {
+    private List<TodoItem>? _todos = new();
+    private string? _newTodo;
+
+    private async Task AddTodo()
+    {
+        if (string.IsNullOrWhiteSpace(_newTodo)) return;
+        
+        _todos!.Add(new TodoItem { Title = _newTodo });
+
+        await localStorage.SetItemAsync<List<TodoItem>?>("todos", _todos);
+        _newTodo = string.Empty;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var savedTodos = await localStorage.GetItemAsync<List<TodoItem>?>("todos");
+
+        if (savedTodos != null)
+        {
+            _todos = savedTodos;
+        }
+    }
+
+}
